@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:erptvet/admi/options.dart';
+import 'package:erptvet/student/schoolmanagement.dart';
 import 'package:erptvet/tools/tool.dart';
 // import 'package:get/get.dart';
 import 'package:connectivity/connectivity.dart';
@@ -46,7 +48,6 @@ class _SigninScreenState extends State<SigninScreen>
       idimmo = pref.getString("idimmo").toString();
     });
   }
-
   void checkNetwork() async {
     subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       if (mounted) {
@@ -206,7 +207,7 @@ class _SigninScreenState extends State<SigninScreen>
       context: context,
       backgroundColor: Colors.white,
       textColor: Colors.black,
-      loadingText: "Traitement en cours",
+      loadingText: "In process ... ",
     );
     progressDialog.show();
   }
@@ -218,15 +219,15 @@ class _SigninScreenState extends State<SigninScreen>
     if(networkOK)
     {
       showProgress();
-      String url = apiUrl + "data/signin";
-      print("URL ::: $url");
+      String url = "${apiUrl}credential/signin";
 
       var data =  {
-        "login": tel,
+        "username": tel,
         "password": password.text,
       };
 
       http.post(Uri.parse(url), body: data,).timeout(const Duration(seconds: 30)).then((res) async {
+
         progressDialog.dismiss();
 
         if (res.statusCode == 400)
@@ -240,39 +241,51 @@ class _SigninScreenState extends State<SigninScreen>
         if (res.statusCode == 200)
         {
           var data = jsonDecode(res.body);
-          if(data["status"] == true)
+          String role = data["role"];
+
+          if(role == "student")
           {
             var user = data["data"][0];
-            String name = user["name"].toString();
+            String name = user["fullname"].toString();
             String tel = user["phone"].toString();
-            String id = user["iduser"].toString();
+            String option = user["name"];
+            String grade = user["grade"];
+            String id = user["id"].toString();
+
+            preferences = await SharedPreferences.getInstance();
+            preferences.setString("name", name);
+            preferences.setString("phone", tel);
+            preferences.setString("option", option);
+            preferences.setString("grade", grade);
+            preferences.setString("iduser", id);
+
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SchoolManagement(),));
+          }
+          else if(role == "admin")
+          {
+            var user = data["data"][0];
+            String name = user["fullname"].toString();
+            String tel = user["phone"].toString();
+            String id = user["id"].toString();
 
             preferences = await SharedPreferences.getInstance();
             preferences.setString("name", name);
             preferences.setString("phone", tel);
             preferences.setString("iduser", id);
 
-            if("" == 'send')
-            {
-              Navigator.of(context).pop();
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Container(),));
-            }
-            else
-            {
-              Navigator.of(context).pop();
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Container(),));
-            }
+            Navigator.of(context).pop();
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Options(),));
           }
-          else
-          {
-            Fluttertoast.showToast(
-                msg: "${data["data"]}",
-                toastLength: Toast.LENGTH_LONG,
+          else if(data["status"] == false)
+            {
+              Fluttertoast.showToast(
+                msg: "Your information is not correct. Please enter a correct ursename and password",
+                toastLength: Toast.LENGTH_SHORT,
                 backgroundColor: Colors.white,
-                textColor: Colors.grey);
-          }
+                textColor: Colors.black,
+              );
+            }
         }
       }).catchError((onError){
         progressDialog.dismiss();
@@ -358,7 +371,7 @@ class _SigninScreenState extends State<SigninScreen>
                         ),
                         Container(
                           height: size.height * 0.11,
-                          padding: EdgeInsets.symmetric(vertical: 20),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
                           child: ElevatedButton(
                             onPressed: () {
                               if(_formKey.currentState!.validate())
@@ -370,7 +383,7 @@ class _SigninScreenState extends State<SigninScreen>
                                 foregroundColor: MaterialStateProperty.all(Colors.white),
                                 backgroundColor: MaterialStateProperty.all(text_color),
                                 shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
+                                    const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.zero,
                                         side: BorderSide(color: text_color)
                                     )

@@ -1,102 +1,138 @@
+import 'package:double_back_to_close/double_back_to_close.dart';
+import 'package:erptvet/student/schoolmanagement.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class CalendarPage extends StatefulWidget {
+import '../tools/heade.dart';
+
+class Account extends StatefulWidget {
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  _AccountState createState() => _AccountState();
 }
 
-class _CalendarPageState extends State<CalendarPage> {
+class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-          alignment: Alignment.topCenter,
-          color: Color(0xFFF0F0F0),
-          height: MediaQuery.of(context).size.height,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, color: Colors.grey),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                        text: "Oct",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0XFF263064),
-                          fontSize: 22,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: " 2009",
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ]),
-                  ),
-                ],
-              ),
-              Text(
-                "Today",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0XFF3E3993),
-                ),
-              )
-            ],
+    return DoubleBack(
+      onFirstBackPress: (context) {
+        Fluttertoast.showToast(
+          msg: "Press again to exit.",
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+        );
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(158),
+          child: AppBar(
+            leading: IconButton(
+              onPressed: (){
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SchoolManagement()));
+              },
+              icon:Icon(Icons.arrow_back_ios),
+              //replace with our own icon data.
+            ),
+            backgroundColor: Colors.black38,
+            iconTheme: IconThemeData(color: Colors.white),
+            flexibleSpace: Container(
+              child: Heade(),
+            ),
+            titleSpacing: 3,
           ),
         ),
-        Positioned(
-          top: 100,
-          child: Container(
-            height: MediaQuery.of(context).size.height - 160,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 15, bottom: 30),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+              alignment: Alignment.topCenter,
+              color: Color(0xFFF0F0F0),
+              height: MediaQuery.of(context).size.height,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
                     children: [
-                      buildDateColumn("S", 7, false),
-                      buildDateColumn("M", 8, false),
-                      buildDateColumn("T", 9, false),
-                      buildDateColumn("W", 10, true),
-                      buildDateColumn("T", 11, false),
-                      buildDateColumn("F", 12, false),
-                      buildDateColumn("S", 13, false),
+                      Icon(Icons.calendar_today, color: Colors.grey),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                            text: "Oct",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0XFF263064),
+                              fontSize: 22,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: " 2009",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ]),
+                      ),
                     ],
                   ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        buildTaskListItem(),
-                        buildTaskListItem(),
-                        buildTaskListItem(),
-                      ],
+                  Text(
+                    "Today",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0XFF3E3993),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        )
-      ],
+            Positioned(
+              top: 100,
+              child: Container(
+                height: MediaQuery.of(context).size.height - 160,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 15, bottom: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          buildDateColumn("S", 7, false),
+                          buildDateColumn("M", 8, false),
+                          buildDateColumn("T", 9, false),
+                          buildDateColumn("W", 10, true),
+                          buildDateColumn("T", 11, false),
+                          buildDateColumn("F", 12, false),
+                          buildDateColumn("S", 13, false),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            buildTaskListItem(),
+                            buildTaskListItem(),
+                            buildTaskListItem(),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -268,7 +304,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return Container(
       decoration: isActive
           ? BoxDecoration(
-              color: Color(0xff402fcc), borderRadius: BorderRadius.circular(10))
+          color: Color(0xff402fcc), borderRadius: BorderRadius.circular(10))
           : BoxDecoration(),
       height: 55,
       width: 35,

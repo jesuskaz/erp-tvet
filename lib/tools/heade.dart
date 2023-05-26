@@ -14,9 +14,12 @@ class _Heade extends State<Heade> {
       decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage(
-              'images/house_01.jpg',
+              'images/head.jpg',
             ),
-            fit: BoxFit.cover),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.4), BlendMode.darken)
+        ),
       ),
     );
   }

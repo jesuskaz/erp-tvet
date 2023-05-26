@@ -81,7 +81,7 @@ final kLightTheme = ThemeData(
 );
 
 const double taille0 = 15;
-const double taille1 = 20;
+const double taille1 = 15;
 const double taille2 = 15;
 const double taille3 = 12;
 
@@ -116,16 +116,25 @@ final kTitleStyle = TextStyle(
   height: 1.5,
 );
 
+List<Color> backgroundColors = [
+  Colors.blue.shade400,
+  Colors.green.shade400,
+  Colors.red.shade400,
+  Colors.yellow.shade400,
+  Colors.orange.shade400,
+  Colors.teal.shade400,
+  Colors.purpleAccent.shade400
+];
+
 final kSubtitleStyle = TextStyle(color: Colors.white, fontSize: 18.0, height: 1.2,);
 
 // const apiUrl = "http://www.oasisapp.tech/api/";
-const domaine = "http://192.168.45.110/mquick/";
+const domaine = "http://192.168.0.170/erp/";
 // const domaine = "http://localhost/mquick/";
 // const apiUrl = "https://oasisapp.tech/api/";
-const apiUrl = domaine + "2023/api/";
+const apiUrl = domaine + "052023/api/";
 
 const ressourceBasePath = apiUrl;
-
 userHeaders() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   var apiToken = preferences.getString("token");
